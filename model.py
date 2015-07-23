@@ -102,27 +102,7 @@ class Melon(object):
 
         return melon
 
-    @classmethod
-    def get_by_id_cart(cls, id):
-        cursor = db_connect()
-        QUERY = """
-                  SELECT common_name,
-                         price,
-                         imgurl
-                   FROM Melons
-                   WHERE id = ?;
-               """
 
-        cursor.execute(QUERY, (id,))
-
-        row = cursor.fetchone()
-
-        if not row:
-            return None
-
-        melon = Melon(*row)
-
-        return melon
 
 class Customer(object):
     """Ubermelon customer.

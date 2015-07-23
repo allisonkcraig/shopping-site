@@ -13,14 +13,14 @@
         </tr>
         </thead>
         <tbody>
-        {% for melon in melon_tuple %}    
+
         <tr>
-            <td>{{ melon[0] }}</td>
-            <td>{{ melon[3] }}</td>
-            <td>{{ melon[1] }}</td>
-            <td>{{ melon[3] * melon[1] }}</td>
-        </tr>
+                    {% for melon in melon_tuple %}    
+            <td>{{ melon[0].common_name }}</td>
+            <td>{{melon[1]}}
         {% endfor %}
+        </tr>
+
         </tbody>
     </table>
 

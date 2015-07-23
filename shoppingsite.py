@@ -59,9 +59,17 @@ def show_melon(id):
 @app.route("/cart")
 def shopping_cart():
     """Display content of shopping cart."""
+
+    # melons = model.Melon.get_by_id()
+    # return render_template("all_melons.html",
+    #                        melon_list=melons)
+
     melons_in_cart = []
     for key, value in session['cart_dict'].items():
-        melons_in_cart.append(model.get_by_id_cart(id) + (value,))
+        # raise Exception("In for loop, accessing melons by ID from our session")
+        new_melon = model.Melon.get_by_id(key)
+        melons_in_cart.append((new_melon, value))
+    print "MELONS IN CART", melons_in_cart
 
     # common_name = melons_in_cart[0][0]
     # qty =
@@ -73,21 +81,25 @@ def shopping_cart():
     return render_template("cart.html", melon_tuple=melons_in_cart)
 
 
-@app.route("/add_to_cart/<int:id>")
+@app.route("/add_to_cart/<string:id>")
 def add_to_cart(id):
     """Add a melon to cart and redirect to shopping cart page.
 
     When a melon is added to the cart, redirect browser to the shopping cart
     page and display a confirmation message: 'Successfully added to cart'.
     """
-    if not session.get('cart_dict', False):
+    print "******************************", session.get('cart_dict')
+    if session.get('cart_dict') == None:
         session['cart_dict'] = {}
+        print "****************************** MAKING DICT"
     # TODO: Finish shopping cart functionality
     #   - use session variables to hold cart list
     session['cart_dict'][id] = session['cart_dict'].get(id, 0) + 1
-    print session['cart_dict'].get(id, 0) + 1
+    print "******************************" , session
     flash("You added a melon")
-    return render_template("cart.html", cart_list=session['cart_dict'])
+    # return "You added sa melon"
+    return redirect('/cart')
+    # return render_template("cart.html", cart_list=session['cart_dict'])
 
 
 @app.route("/login", methods=["GET"])
