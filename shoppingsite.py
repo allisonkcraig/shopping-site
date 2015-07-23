@@ -7,7 +7,8 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken.
 """
 
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, session
+from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 
 import model
@@ -25,7 +26,6 @@ app.secret_key = 'this-should-be-something-unguessable'
 # error.
 
 app.jinja_env.undefined = jinja2.StrictUndefined
-
 
 @app.route("/")
 def index():
@@ -59,11 +59,18 @@ def show_melon(id):
 @app.route("/cart")
 def shopping_cart():
     """Display content of shopping cart."""
+    melons_in_cart = []
+    for key, value in session['cart_dict'].items():
+        melons_in_cart.append(model.get_by_id_cart(id) + (value,))
 
+    # common_name = melons_in_cart[0][0]
+    # qty =
+    # price_per = melons_in_cart[0][1]
+    # total_price
     # TODO: Display the contents of the shopping cart.
     #   - The cart is a list in session containing melons added
 
-    return render_template("cart.html")
+    return render_template("cart.html", melon_tuple=melons_in_cart)
 
 
 @app.route("/add_to_cart/<int:id>")
@@ -73,11 +80,14 @@ def add_to_cart(id):
     When a melon is added to the cart, redirect browser to the shopping cart
     page and display a confirmation message: 'Successfully added to cart'.
     """
-
+    if not session.get('cart_dict', False):
+        session['cart_dict'] = {}
     # TODO: Finish shopping cart functionality
     #   - use session variables to hold cart list
-
-    return "Oops! This needs to be implemented!"
+    session['cart_dict'][id] = session['cart_dict'].get(id, 0) + 1
+    print session['cart_dict'].get(id, 0) + 1
+    flash("You added a melon")
+    return render_template("cart.html", cart_list=session['cart_dict'])
 
 
 @app.route("/login", methods=["GET"])
@@ -113,3 +123,5 @@ def checkout():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    app.debug = True
+    DebugToolbarExtension(app)
