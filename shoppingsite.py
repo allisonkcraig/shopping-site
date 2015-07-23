@@ -63,12 +63,13 @@ def shopping_cart():
     # melons = model.Melon.get_by_id()
     # return render_template("all_melons.html",
     #                        melon_list=melons)
-
+    total = 0
     melons_in_cart = []
     for key, value in session['cart_dict'].items():
         # raise Exception("In for loop, accessing melons by ID from our session")
         new_melon = model.Melon.get_by_id(key)
         melons_in_cart.append((new_melon, value))
+        total += new_melon.price * value
     print "MELONS IN CART", melons_in_cart
 
     # common_name = melons_in_cart[0][0]
@@ -78,7 +79,7 @@ def shopping_cart():
     # TODO: Display the contents of the shopping cart.
     #   - The cart is a list in session containing melons added
 
-    return render_template("cart.html", melon_tuple=melons_in_cart)
+    return render_template("cart.html", melon_tuple=melons_in_cart, total=total)
 
 
 @app.route("/add_to_cart/<string:id>")
@@ -96,7 +97,7 @@ def add_to_cart(id):
     #   - use session variables to hold cart list
     session['cart_dict'][id] = session['cart_dict'].get(id, 0) + 1
     print "******************************" , session
-    flash("You added a melon")
+    flash("You added a "+ model.Melon.get_by_id(id).common_name + " to your cart!")
     # return "You added sa melon"
     return redirect('/cart')
     # return render_template("cart.html", cart_list=session['cart_dict'])

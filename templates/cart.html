@@ -13,19 +13,19 @@
         </tr>
         </thead>
         <tbody>
-
+        {% for melon in melon_tuple %}    
         <tr>
-                    {% for melon in melon_tuple %}    
             <td>{{ melon[0].common_name }}</td>
-            <td>{{melon[1]}}
-        {% endfor %}
+            <td>{{ melon[1] }}</td>
+            <td>${{ "%.2f" | format(melon[0].price) }}</td>
+            <td>${{ "%.2f" | format(melon[0].price * melon[1]) }}</td>
         </tr>
+
+        {% endfor %}
 
         </tbody>
     </table>
-
-    <h3>Total: $27.00</h3>
-
+    <h3>Total: ${{ "%.2f" | format(total) }}</h3>
     <a href="/checkout" class="btn btn-large btn-primary">Check Out</a>
 
 {% endblock %}
