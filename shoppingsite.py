@@ -7,7 +7,7 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken.
 """
 
 
-from flask import Flask, render_template, redirect, flash, session
+from flask import Flask, render_template, redirect, flash, session, request 
 from flask_debugtoolbar import DebugToolbarExtension
 import jinja2
 
@@ -37,6 +37,8 @@ def index():
 @app.route("/melons")
 def list_melons():
     """Return page showing all the melons ubermelon has to offer"""
+
+
 
     melons = model.Melon.get_all()
     return render_template("all_melons.html",
@@ -118,10 +120,28 @@ def process_login():
     dictionary, look up the user, and store them in the session.
     """
 
-    # TODO: Need to implement this!
+    email_input = request.form.get("email")
+    pword_input = request.form.get("password")
 
-    return "Oops! This needs to be implemented"
+    customer = model.Customer.get_by_email(email_input)
+    if customer is None:
+        flash("No such email")
+        return redirect("/login")
+    else:
+        if pword_input != customer.pword:
+            flash("Incorrect password")
+            return redirect("/login")
+        else:
+            flash("Login successful!!")
+            session['logged_in_customer_email'] = email_input
+            return redirect("/melons")
 
+            
+@app.route("/logout")
+def process_logout():
+    del session['logged_in_customer_email']
+    flash("You have been logged out")
+    return redirect("/melons")
 
 @app.route("/checkout")
 def checkout():
