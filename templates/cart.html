@@ -13,15 +13,18 @@
         </tr>
         </thead>
         <tbody>
-        {% for melon in melon_tuple %}    
-        <tr>
-            <td>{{ melon[0].common_name }}</td>
-            <td>{{ melon[1] }}</td>
-            <td>${{ "%.2f" | format(melon[0].price) }}</td>
-            <td>${{ "%.2f" | format(melon[0].price * melon[1]) }}</td>
-        </tr>
+         {% if melon_tuple != [] %}
+            {% for melon in melon_tuple %}    
+                <tr>
+                    <td>{{ melon[0].common_name }}</td>
+                    <td>{{ melon[1] }}</td>
+                    <td>${{ "%.2f" | format(melon[0].price) }}</td>
+                    <td>${{ "%.2f" | format(melon[0].price * melon[1]) }}</td>
+                </tr>
 
-        {% endfor %}
+            {% endfor %}
+        {% endif %}
+
 
         </tbody>
     </table>

@@ -67,11 +67,12 @@ def shopping_cart():
     #                        melon_list=melons)
     total = 0
     melons_in_cart = []
-    for key, value in session['cart_dict'].items():
-        # raise Exception("In for loop, accessing melons by ID from our session")
-        new_melon = model.Melon.get_by_id(key)
-        melons_in_cart.append((new_melon, value))
-        total += new_melon.price * value
+    if session.get('cart_dict') is not None:
+        for key, value in session['cart_dict'].items():
+            # raise Exception("In for loop, accessing melons by ID from our session")
+            new_melon = model.Melon.get_by_id(key)
+            melons_in_cart.append((new_melon, value))
+            total += new_melon.price * value
     print "MELONS IN CART", melons_in_cart
 
     # common_name = melons_in_cart[0][0]
@@ -136,10 +137,11 @@ def process_login():
             session['logged_in_customer_email'] = email_input
             return redirect("/melons")
 
-            
+
 @app.route("/logout")
 def process_logout():
     del session['logged_in_customer_email']
+    del session['cart_dict']
     flash("You have been logged out")
     return redirect("/melons")
 
